@@ -23,6 +23,8 @@ namespace ConsoleApp1
 
             DataCollector.FreeResources();
 
+            Console.WriteLine("DONE");
+
             Console.ReadLine();
             return;
         }
