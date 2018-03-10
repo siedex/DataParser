@@ -9,7 +9,7 @@ namespace DataParser.DataCollectors.PhoneCollectors
 {
     abstract class AbstractPhoneCollector
     {      
-        protected IEnumerable<string> phones;
+        protected List<string> phones;
         
         protected AutoResetEvent resetEvent = new AutoResetEvent(false);
         private static object locker = new object();
@@ -24,11 +24,10 @@ namespace DataParser.DataCollectors.PhoneCollectors
         {
             lock(locker)
             {
+                phones = new List<string>();
                 currentUrl = url;
                 resetEvent.Reset();
                 var controller = WebBrowserController.Instance;
-
-                controller.Browser.DocumentCompleted += DocumentCompletedHandler;
 
                 controller.Browser.Invoke(new Action(() =>
                     {
@@ -37,7 +36,6 @@ namespace DataParser.DataCollectors.PhoneCollectors
                     }
                 ));
 
-                
                 resetEvent.WaitOne();
 
                 controller.Browser.Invoke(new Action(() =>
@@ -46,21 +44,12 @@ namespace DataParser.DataCollectors.PhoneCollectors
                     Dispose();
                 }
                ));
-
-                controller.Browser.DocumentCompleted -= DocumentCompletedHandler;
             }
             
             return this.phones;
         }
 
-        private void Browser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
-        {
-           
-            throw new NotImplementedException();
-        }
-
         protected abstract void Initialize();
         protected abstract void Dispose();
-        protected abstract void DocumentCompletedHandler(object sender, WebBrowserDocumentCompletedEventArgs e);
     }
 }

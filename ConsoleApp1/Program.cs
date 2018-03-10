@@ -16,8 +16,13 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("-----------------------------------------");
                 Console.WriteLine(model.Url);
-                model.CollectPhones();
-                model.Phones?.ToList().ForEach(phone => Console.WriteLine(phone));
+
+                var phones = model.CollectPhones();
+                if (phones != null && phones.Count() > 0)
+                    phones.ToList().ForEach(phone => Console.WriteLine(phone));
+                else
+                    Console.WriteLine("No phones");
+                
                 Console.WriteLine("-----------------------------------------");
             });
 

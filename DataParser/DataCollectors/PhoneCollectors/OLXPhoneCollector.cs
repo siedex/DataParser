@@ -27,11 +27,6 @@ namespace DataParser.DataCollectors.PhoneCollectors
             }
         }
 
-        protected override void DocumentCompletedHandler(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
-        { 
-            
-        }
-
         private bool ClickButton()
         {
             var browser = WebBrowserController.Instance.Browser;
@@ -91,18 +86,16 @@ namespace DataParser.DataCollectors.PhoneCollectors
                     SelectSingleNode(".//strong");
                 if (!strongNode.InnerText.ToLower().Contains("x"))
                 {
-                    List<string> numbers = new List<string>();
                     var spans = strongNode.SelectNodes("./span");
                     if (spans != null)
                     {
-                        spans.ToList().ForEach(span => numbers.Add(span.InnerText.Trim()));
+                        spans.ToList().ForEach(span => phones.Add(span.InnerText.Trim()));
                     }
                     else
                     {
-                        numbers.Add(strongNode.InnerText.Trim());
+                        phones.Add(strongNode.InnerText.Trim());
                     }
 
-                    phones = numbers;
                     browser.Stop();
                     resetEvent.Set();
                 }

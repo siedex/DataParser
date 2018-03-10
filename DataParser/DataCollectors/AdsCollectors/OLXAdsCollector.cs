@@ -93,6 +93,8 @@ namespace DataParser.DataCollectors.AdsCollectors
                 string userName = userDiv.SelectSingleNode("./h4").GetInnermostNode().InnerText.Trim();
 
                 dictionary.Add(DictionaryConstants.AuthorNameKey, userName);
+
+                dictionary.Add(DictionaryConstants.HasPhoneKey, HasPhoneButton(document).ToString());
             }
             catch (Exception)
             {
@@ -168,7 +170,7 @@ namespace DataParser.DataCollectors.AdsCollectors
 
         private static string detailsTableRegex = string.Format(RegexConstants.RegexFullWordPattern, "details");
 
-        internal static string contactButtonRegex = string.Format(RegexConstants.RegexFullWordPattern, "contact-button");
+        internal static string contactButtonRegex = string.Format(RegexConstants.RegexFullWordPattern, "contact-button link-phone");
         internal static string spoilerHiddenRegex = string.Format(RegexConstants.RegexFullWordPattern, "spoilerHidden");
     }
 }

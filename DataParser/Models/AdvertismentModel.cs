@@ -50,10 +50,14 @@ namespace DataParser.Models
         public string BeginData { get; set; }
 
         internal Resource Resource {get; set;}
+        internal bool HasPhone { get; set; }
 
         public IEnumerable<string> CollectPhones()
         {
             if (Phones != null && Phones.Count() > 0) return Phones;
+
+            if (!HasPhone)
+                return null;
 
             switch(Resource)
             {
@@ -66,5 +70,6 @@ namespace DataParser.Models
 
             throw new InvalidOperationException("Invalid resource");
         }
+
     }
 }
