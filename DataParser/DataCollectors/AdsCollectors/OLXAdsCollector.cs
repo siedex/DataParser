@@ -78,7 +78,7 @@ namespace DataParser.DataCollectors.AdsCollectors
                 var spoilersHidden = detailsDiv.SelectNodes(".//span[@class]")?.Where("class", spoilerHiddenRegex);
                 if (spoilersHidden != null)
                 {
-                    phones = spoilersHidden.Select(span => span.GetAttributeValue("data-phone", string.Empty).Insert(0, "("));
+                    phones = spoilersHidden.Select(span => span.GetAttributeValue("data-phone", string.Empty).SanitizePhone());
                     spoilersHidden.ToList().ForEach(span =>
                     {
                         span.PreviousSibling.Remove();
@@ -108,7 +108,7 @@ namespace DataParser.DataCollectors.AdsCollectors
 
         private static Dictionary<string, string> CollectVariativeData(HtmlDocument document)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
+            var data = new Dictionary<string, string>();
 
             try
             {
@@ -118,10 +118,34 @@ namespace DataParser.DataCollectors.AdsCollectors
                 tables.ToList().ForEach(table =>
                 {
                     string key = table.SelectSingleNode(".//th").InnerText.Trim();
-                    var td = table.SelectSingleNode(".//td").GetInnermostNode();
-                    string value = td.InnerText.Trim();
+                    var td = table.SelectSingleNode(".//td");
 
-                    data.Add(key, value);
+                    var strBuilder = new StringBuilder();
+
+                    var nodes = td.SelectNodes(".//a");
+
+                    if (nodes != null)
+                    {
+                        nodes.ToList().ForEach((node) =>
+                         {
+                             var val = node.InnerText.Trim();
+
+                             if (strBuilder.Length > 0)
+                             {
+                                 strBuilder.Append(", " + val);
+                             }
+                             else
+                             {
+                                 strBuilder.Append(val);
+                             }
+                         });
+                    }
+                    else
+                    {
+                        strBuilder.Append(td.GetInnermostNode()?.InnerText?.Trim());
+                    }
+                    
+                    data.Add(key, strBuilder.ToString());
                 });
             }
             catch (Exception)

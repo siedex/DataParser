@@ -11,7 +11,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var result = DataCollector.CollectFromOLX(20);
+            var result = DataCollector.CollectFromOLX();
             result.ToList().ForEach(model =>
             {
                 Console.WriteLine("-----------------------------------------");

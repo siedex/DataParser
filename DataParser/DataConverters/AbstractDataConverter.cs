@@ -5,6 +5,7 @@ using System.Linq;
 using DataParser.Models;
 using DataParser.DataCollectors;
 using DataParser.Constants.Common;
+using DataParser.Helpers;
 
 namespace DataParser.DataConverters
 {
@@ -21,14 +22,13 @@ namespace DataParser.DataConverters
             imgList.Remove(model.PreviewImg);
 
             model.Images = imgList;
-            
             model.Phones = data.Phones;
 
             ConvertCommonParameters(ref model, data.CommonFields);
 
             try
             {
-                ConvertVariativeFields(ref model, data.VariativeFields);
+                model.OtherData = new SerializableDictionary<string, string>(ConvertVariativeFields(ref model, data.VariativeFields));
             }
             catch (Exception ex)
             {
@@ -49,6 +49,6 @@ namespace DataParser.DataConverters
             model.HasPhone = bool.Parse(commonFields[DictionaryConstants.HasPhoneKey]);
         }
 
-        protected abstract void ConvertVariativeFields(ref AdvertismentModel model, Dictionary<string, string> variativeFields);
+        protected abstract Dictionary<string, string> ConvertVariativeFields(ref AdvertismentModel model, Dictionary<string, string> variativeFields);
     }
 }
